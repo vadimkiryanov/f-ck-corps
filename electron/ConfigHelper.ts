@@ -68,8 +68,8 @@ export class ConfigHelper extends EventEmitter {
       }
       return model;
     } else if (provider === "gemini")  {
-      // Only allow gemini-1.5-pro and gemini-2.0-flash for Gemini
-      const allowedModels = ['gemini-1.5-pro', 'gemini-2.0-flash'];
+      // Only allow gemini-2.5-pro and gemini-2.0-flash for Gemini
+      const allowedModels = ['gemini-2.5-pro', 'gemini-2.0-flash'];
       if (!allowedModels.includes(model)) {
         console.warn(`Invalid Gemini model specified: ${model}. Using default model: gemini-2.0-flash`);
         return 'gemini-2.0-flash'; // Changed default to flash

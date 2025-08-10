@@ -531,7 +531,7 @@ export class ProcessingHelper {
               role: "user",
               parts: [
                 {
-                  text: `You are a coding challenge interpreter. Analyze the screenshots of the coding problem and extract all relevant information. Return the information in JSON format with these fields: problem_statement, constraints, example_input, example_output. Just return the structured JSON without any other text. Preferred coding language we gonna use for this problem is ${language}.`
+                  text: `You are a coding challenge interpreter. Analyze the screenshots of the coding problem and extract all relevant information. Return the information in JSON format with these fields: problem_statement, constraints, example_input, example_output. Just return the structured JSON without any other text. Preferred coding language we gonna use for this problem is ${language}. Do this response on a Russian language.`
                 },
                 ...imageDataList.map(data => ({
                   inlineData: {
@@ -692,17 +692,17 @@ export class ProcessingHelper {
       if (error?.response?.status === 401) {
         return {
           success: false,
-          error: "Invalid OpenAI API key. Please check your settings."
+          error: "Invalid OpenAI API key. Please check your settings." + ` Статус-код: ${error?.response?.status}`
         };
       } else if (error?.response?.status === 429) {
         return {
           success: false,
-          error: "OpenAI API rate limit exceeded or insufficient credits. Please try again later."
+          error: "OpenAI API rate limit exceeded or insufficient credits. Please try again later." + ` Статус-код: ${error?.response?.status}`
         };
       } else if (error?.response?.status === 500) {
         return {
           success: false,
-          error: "OpenAI server error. Please try again later."
+          error: "OpenAI server error. Please try again later." + ` Статус-код: ${error?.response?.status}`
         };
       }
 
@@ -749,7 +749,7 @@ ${problemInfo.example_input || "No example input provided."}
 EXAMPLE OUTPUT:
 ${problemInfo.example_output || "No example output provided."}
 
-LANGUAGE: ${language}
+LANGUAGE: Try this language: ${language}, if the task does not fit, try another, more suitable, which is used in the task.
 
 I need the response in the following format:
 1. Code: A clean, optimized implementation in ${language}
@@ -760,6 +760,8 @@ I need the response in the following format:
 For complexity explanations, please be thorough. For example: "Time complexity: O(n) because we iterate through the array only once. This is optimal as we need to examine each element at least once to find the solution." or "Space complexity: O(n) because in the worst case, we store all elements in the hashmap. The additional space scales linearly with the input size."
 
 Your solution should be efficient, well-commented, and handle edge cases.
+
+The response should be in Russian.
 `;
 
       let responseContent;

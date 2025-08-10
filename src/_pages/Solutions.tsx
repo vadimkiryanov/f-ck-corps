@@ -26,8 +26,8 @@ export const ContentSection = ({
       {title}
     </h2>
     {isLoading ? (
-      <div className="mt-4 flex">
-        <p className="text-xs bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-clip-text text-transparent animate-pulse">
+      <div className="flex mt-4">
+        <p className="text-xs text-transparent bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-clip-text animate-pulse">
           Extracting problem statement...
         </p>
       </div>
@@ -61,23 +61,23 @@ const SolutionSection = ({
   }
 
   return (
-    <div className="space-y-2 relative">
+    <div className="relative space-y-2">
       <h2 className="text-[13px] font-medium text-white tracking-wide">
         {title}
       </h2>
       {isLoading ? (
         <div className="space-y-1.5">
-          <div className="mt-4 flex">
-            <p className="text-xs bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-clip-text text-transparent animate-pulse">
+          <div className="flex mt-4">
+            <p className="text-xs text-transparent bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-clip-text animate-pulse">
               Loading solutions...
             </p>
           </div>
         </div>
       ) : (
-        <div className="w-full relative">
+        <div className="relative w-full">
           <button
             onClick={copyToClipboard}
-            className="absolute top-2 right-2 text-xs text-white bg-white/10 hover:bg-white/20 rounded px-2 py-1 transition"
+            className="absolute px-2 py-1 text-xs text-white transition rounded top-2 right-2 bg-white/10 hover:bg-white/20"
           >
             {copied ? "Copied!" : "Copy"}
           </button>
@@ -138,14 +138,14 @@ export const ComplexitySection = ({
         Complexity
       </h2>
       {isLoading ? (
-        <p className="text-xs bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-clip-text text-transparent animate-pulse">
+        <p className="text-xs text-transparent bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-clip-text animate-pulse">
           Calculating complexity...
         </p>
       ) : (
         <div className="space-y-3">
           <div className="text-[13px] leading-[1.4] text-gray-100 bg-white/5 rounded-md p-3">
             <div className="flex items-start gap-2">
-              <div className="w-1 h-1 rounded-full bg-blue-400/80 mt-2 shrink-0" />
+              <div className="w-1 h-1 mt-2 rounded-full bg-blue-400/80 shrink-0" />
               <div>
                 <strong>Time:</strong> {formattedTimeComplexity}
               </div>
@@ -153,7 +153,7 @@ export const ComplexitySection = ({
           </div>
           <div className="text-[13px] leading-[1.4] text-gray-100 bg-white/5 rounded-md p-3">
             <div className="flex items-start gap-2">
-              <div className="w-1 h-1 rounded-full bg-blue-400/80 mt-2 shrink-0" />
+              <div className="w-1 h-1 mt-2 rounded-full bg-blue-400/80 shrink-0" />
               <div>
                 <strong>Space:</strong> {formattedSpaceComplexity}
               </div>
@@ -474,7 +474,7 @@ const Solutions: React.FC<SolutionsProps> = ({
         />
       ) : (
         <div ref={contentRef} className="relative">
-          <div className="space-y-3 px-4 py-3">
+          <div className="px-4 py-3 space-y-3">
           {/* Conditionally render the screenshot queue if solutionData is available */}
           {solutionData && (
             <div className="bg-transparent w-fit">
@@ -501,9 +501,9 @@ const Solutions: React.FC<SolutionsProps> = ({
           />
 
           {/* Main Content - Modified width constraints */}
-          <div className="w-full text-sm text-black bg-black/60 rounded-md">
-            <div className="rounded-lg overflow-hidden">
-              <div className="px-4 py-3 space-y-4 max-w-full">
+          <div className="w-full text-sm text-black rounded-md bg-black/60">
+            <div className="overflow-hidden rounded-lg">
+              <div className="max-w-full px-4 py-3 space-y-4">
                 {!solutionData && (
                   <>
                     <ContentSection
@@ -512,8 +512,8 @@ const Solutions: React.FC<SolutionsProps> = ({
                       isLoading={!problemStatementData}
                     />
                     {problemStatementData && (
-                      <div className="mt-4 flex">
-                        <p className="text-xs bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-clip-text text-transparent animate-pulse">
+                      <div className="flex mt-4">
+                        <p className="text-xs text-transparent bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-clip-text animate-pulse">
                           Generating solutions...
                         </p>
                       </div>
@@ -534,7 +534,7 @@ const Solutions: React.FC<SolutionsProps> = ({
                                   key={index}
                                   className="flex items-start gap-2"
                                 >
-                                  <div className="w-1 h-1 rounded-full bg-blue-400/80 mt-2 shrink-0" />
+                                  <div className="w-1 h-1 mt-2 rounded-full bg-blue-400/80 shrink-0" />
                                   <div>{thought}</div>
                                 </div>
                               ))}
