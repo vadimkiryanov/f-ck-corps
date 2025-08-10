@@ -34,6 +34,7 @@ const state = {
   view: "queue" as "queue" | "solutions" | "debug",
   problemInfo: null as any,
   hasDebugged: false,
+  additionalPrompt: "",
 
   // Processing events
   PROCESSING_EVENTS: {
@@ -70,6 +71,7 @@ export interface IProcessingHelperDeps {
   setHasDebugged: (value: boolean) => void
   getHasDebugged: () => boolean
   PROCESSING_EVENTS: typeof state.PROCESSING_EVENTS
+  getAdditionalPrompt: () => string
 }
 
 export interface IShortcutsHelperDeps {
@@ -85,6 +87,7 @@ export interface IShortcutsHelperDeps {
   moveWindowRight: () => void
   moveWindowUp: () => void
   moveWindowDown: () => void
+  getAdditionalPrompt: () => string
 }
 
 export interface IIpcHandlerDeps {
@@ -107,6 +110,7 @@ export interface IIpcHandlerDeps {
   moveWindowRight: () => void
   moveWindowUp: () => void
   moveWindowDown: () => void
+  setAdditionalPrompt: (prompt: string) => void
 }
 
 // Initialize helpers
@@ -127,7 +131,8 @@ function initializeHelpers() {
     deleteScreenshot,
     setHasDebugged,
     getHasDebugged,
-    PROCESSING_EVENTS: state.PROCESSING_EVENTS
+    PROCESSING_EVENTS: state.PROCESSING_EVENTS,
+    getAdditionalPrompt
   } as IProcessingHelperDeps)
   state.shortcutsHelper = new ShortcutsHelper({
     getMainWindow,
@@ -138,6 +143,7 @@ function initializeHelpers() {
     setView,
     isVisible: () => state.isWindowVisible,
     toggleMainWindow,
+    getAdditionalPrompt,
     moveWindowLeft: () =>
       moveWindowHorizontal((x) =>
         Math.max(-(state.windowSize?.width || 0) / 2, x - state.step)
@@ -557,7 +563,8 @@ async function initializeApp() {
           )
         ),
       moveWindowUp: () => moveWindowVertical((y) => y - state.step),
-      moveWindowDown: () => moveWindowVertical((y) => y + state.step)
+      moveWindowDown: () => moveWindowVertical((y) => y + state.step),
+      setAdditionalPrompt
     })
     await createWindow()
     state.shortcutsHelper?.registerGlobalShortcuts()
@@ -685,6 +692,14 @@ function getHasDebugged(): boolean {
   return state.hasDebugged
 }
 
+function getAdditionalPrompt(): string {
+  return state.additionalPrompt
+}
+
+function setAdditionalPrompt(prompt: string): void {
+  state.additionalPrompt = prompt
+}
+
 // Export state and functions for other modules
 export {
   state,
@@ -708,7 +723,9 @@ export {
   getImagePreview,
   deleteScreenshot,
   setHasDebugged,
-  getHasDebugged
+  getHasDebugged,
+  getAdditionalPrompt,
+  setAdditionalPrompt
 }
 
 app.whenReady().then(initializeApp)

@@ -196,7 +196,7 @@ export class ProcessingHelper {
     }
   }
 
-  public async processScreenshots(): Promise<void> {
+  public async processScreenshots(additionalPrompt?: string): Promise<void> {
     const mainWindow = this.deps.getMainWindow()
     if (!mainWindow) return
 
@@ -286,7 +286,11 @@ export class ProcessingHelper {
           throw new Error("Failed to load screenshot data");
         }
 
-        const result = await this.processScreenshotsHelper(validScreenshots, signal)
+        const result = await this.processScreenshotsHelper(
+          validScreenshots,
+          signal,
+          additionalPrompt
+        )
 
         if (!result.success) {
           console.log("Processing failed:", result.error)
@@ -440,7 +444,8 @@ export class ProcessingHelper {
 
   private async processScreenshotsHelper(
     screenshots: Array<{ path: string; data: string }>,
-    signal: AbortSignal
+    signal: AbortSignal,
+    additionalPrompt?: string
   ) {
     try {
       const config = configHelper.loadConfig();
@@ -484,9 +489,9 @@ export class ProcessingHelper {
             content: [
               {
                 type: "text" as const, 
-                text: `Extract the coding problem details from these screenshots. Return in JSON format. Preferred coding language we gonna use for this problem is ${language}.`
+                text: `Extract the coding problem details from these screenshots. Return in JSON format. Preferred coding language we gonna use for this problem is ${language}. ${additionalPrompt ? `Additional user prompt: ${additionalPrompt}` : ''}`
               },
-              ...imageDataList.map(data => ({
+              ...imageDataList.map((data) => ({
                 type: "image_url" as const,
                 image_url: { url: `data:image/png;base64,${data}` }
               }))
@@ -531,7 +536,7 @@ export class ProcessingHelper {
               role: "user",
               parts: [
                 {
-                  text: `You are a coding challenge interpreter. Analyze the screenshots of the coding problem and extract all relevant information. Return the information in JSON format with these fields: problem_statement, constraints, example_input, example_output. Just return the structured JSON without any other text. Preferred coding language we gonna use for this problem is ${language}. Do this response on a Russian language.`
+                  text: `You are a coding challenge interpreter. Analyze the screenshots of the coding problem and extract all relevant information. Return the information in JSON format with these fields: problem_statement, constraints, example_input, example_output. Just return the structured JSON without any other text. Preferred coding language we gonna use for this problem is ${language}. Do this response on a Russian language. ${additionalPrompt ? `Additional user prompt: ${additionalPrompt}` : ''}`
                 },
                 ...imageDataList.map(data => ({
                   inlineData: {
@@ -589,7 +594,7 @@ export class ProcessingHelper {
               content: [
                 {
                   type: "text" as const,
-                  text: `Extract the coding problem details from these screenshots. Return in JSON format with these fields: problem_statement, constraints, example_input, example_output. Preferred coding language is ${language}.`
+                  text: `Extract the coding problem details from these screenshots. Return in JSON format with these fields: problem_statement, constraints, example_input, example_output. Preferred coding language is ${language}. ${additionalPrompt ? `Additional user prompt: ${additionalPrompt}` : ''}`
                 },
                 ...imageDataList.map(data => ({
                   type: "image" as const,

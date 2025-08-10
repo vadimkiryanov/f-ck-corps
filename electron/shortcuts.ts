@@ -53,7 +53,8 @@ export class ShortcutsHelper {
     })
 
     globalShortcut.register("CommandOrControl+Enter", async () => {
-      await this.deps.processingHelper?.processScreenshots()
+      const additionalPrompt = this.deps.getAdditionalPrompt()
+      await this.deps.processingHelper?.processScreenshots(additionalPrompt)
     })
 
     globalShortcut.register("CommandOrControl+R", () => {

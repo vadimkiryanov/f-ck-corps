@@ -232,22 +232,44 @@ export function initializeIpcHandlers(deps: IIpcHandlerDeps): void {
   })
 
   // Process screenshot handlers
-  ipcMain.handle("trigger-process-screenshots", async () => {
-    try {
-      // Check for API key before processing
-      if (!configHelper.hasApiKey()) {
-        const mainWindow = deps.getMainWindow();
-        if (mainWindow) {
-          mainWindow.webContents.send(deps.PROCESSING_EVENTS.API_KEY_INVALID);
+  ipcMain.handle(
+    "trigger-process-screenshots",
+    async (event, additionalPrompt) => {
+      try {
+        // Check for API key before processing
+        if (!configHelper.hasApiKey()) {
+          const mainWindow = deps.getMainWindow()
+          if (mainWindow) {
+            mainWindow.webContents.send(deps.PROCESSING_EVENTS.API_KEY_INVALID)
+          }
+          return { success: false, error: "API key required" }
         }
-        return { success: false, error: "API key required" };
+
+        await deps.processingHelper?.processScreenshots(additionalPrompt)
+        return { success: true }
+      } catch (error) {
+        console.error("Error processing screenshots:", error)
+        return { error: "Failed to process screenshots" }
       }
-      
-      await deps.processingHelper?.processScreenshots()
+    }
+  )
+
+  ipcMain.on("update-additional-prompt", (event, prompt) => {
+    deps.setAdditionalPrompt(prompt)
+  })
+
+  ipcMain.handle("clear-screenshots", async () => {
+    try {
+      deps.clearQueues()
+      const mainWindow = deps.getMainWindow()
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send("reset-view")
+        mainWindow.webContents.send("reset")
+      }
       return { success: true }
     } catch (error) {
-      console.error("Error processing screenshots:", error)
-      return { error: "Failed to process screenshots" }
+      console.error("Error clearing screenshots:", error)
+      return { error: "Failed to clear screenshots" }
     }
   })
 

@@ -22,6 +22,13 @@ const QueueCommands: React.FC<QueueCommandsProps> = ({
   const tooltipRef = useRef<HTMLDivElement>(null)
   const { showToast } = useToast()
 
+  // Для промпта
+    const [inputValue, setInputValue] = useState("");
+
+    useEffect(() => {
+      window.electronAPI.updateAdditionalPrompt(inputValue);
+    }, [inputValue]);
+
   const languages = [
     { value: "javascript", label: "JavaScript" },
     { value: "typescript", label: "TypeScript" },
@@ -127,7 +134,9 @@ const QueueCommands: React.FC<QueueCommandsProps> = ({
 
                 try {
                   const result =
-                    await window.electronAPI.triggerProcessScreenshots()
+                    await window.electronAPI.triggerProcessScreenshots(
+                      inputValue
+                    )
                   if (!result.success) {
                     console.error(
                       "Failed to process screenshots:",
@@ -294,7 +303,9 @@ const QueueCommands: React.FC<QueueCommandsProps> = ({
 
                           try {
                             const result =
-                              await window.electronAPI.triggerProcessScreenshots()
+                              await window.electronAPI.triggerProcessScreenshots(
+                                inputValue
+                              )
                             if (!result.success) {
                               console.error(
                                 "Failed to process screenshots:",
@@ -456,7 +467,18 @@ const QueueCommands: React.FC<QueueCommandsProps> = ({
                 </div>
               </div>
             )}
+
+         
+                    
           </div>
+             	{/* Дополнительный промпт */}
+					<input
+						type="text"
+						className="max-w-xs text-gray-800 bg-gray-100 rounded-md input input-bordered input-primary w-60"
+						placeholder="Промпт"
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+					/>
         </div>
       </div>
     </div>

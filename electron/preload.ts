@@ -149,8 +149,11 @@ const electronAPI = {
   // External URL handler
   openLink: (url: string) => shell.openExternal(url),
   triggerScreenshot: () => ipcRenderer.invoke("trigger-screenshot"),
-  triggerProcessScreenshots: () =>
-    ipcRenderer.invoke("trigger-process-screenshots"),
+  triggerProcessScreenshots: (additionalPrompt?: string) =>
+    ipcRenderer.invoke("trigger-process-screenshots", additionalPrompt),
+  clearScreenshots: () => ipcRenderer.invoke("clear-screenshots"),
+  updateAdditionalPrompt: (prompt: string) =>
+    ipcRenderer.send("update-additional-prompt", prompt),
   triggerReset: () => ipcRenderer.invoke("trigger-reset"),
   triggerMoveLeft: () => ipcRenderer.invoke("trigger-move-left"),
   triggerMoveRight: () => ipcRenderer.invoke("trigger-move-right"),
