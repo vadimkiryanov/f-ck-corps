@@ -721,25 +721,25 @@ export class ProcessingHelper {
 
   private async generateSolutionsHelper(signal: AbortSignal) {
     try {
-      const problemInfo = this.deps.getProblemInfo();
-      const language = await this.getLanguage();
-      const config = configHelper.loadConfig();
-      const mainWindow = this.deps.getMainWindow();
+		const problemInfo = this.deps.getProblemInfo();
+		const language = await this.getLanguage();
+		const config = configHelper.loadConfig();
+		const mainWindow = this.deps.getMainWindow();
 
-      if (!problemInfo) {
-        throw new Error("No problem info available");
-      }
+		if (!problemInfo) {
+			throw new Error("No problem info available");
+		}
 
-      // Update progress status
-      if (mainWindow) {
-        mainWindow.webContents.send("processing-status", {
-          message: "Creating optimal solution with detailed explanations...",
-          progress: 60
-        });
-      }
+		// Update progress status
+		if (mainWindow) {
+			mainWindow.webContents.send("processing-status", {
+				message: "Creating optimal solution with detailed explanations...",
+				progress: 60,
+			});
+		}
 
-      // Create prompt for solution generation
-      const promptText = `
+		// Create prompt for solution generation
+		const promptText = `
 Generate a detailed solution for the following coding problem:
 
 PROBLEM STATEMENT:
@@ -769,202 +769,182 @@ Your solution should be efficient, well-commented, and handle edge cases.
 The response should be in Russian.
 `;
 
-      let responseContent;
-      
-      if (config.apiProvider === "openai") {
-        // OpenAI processing
-        if (!this.openaiClient) {
-          return {
-            success: false,
-            error: "OpenAI API key not configured. Please check your settings."
-          };
-        }
-        
-        // Send to OpenAI API
-        const solutionResponse = await this.openaiClient.chat.completions.create({
-          model: config.solutionModel || "gpt-4o",
-          messages: [
-            { role: "system", content: "You are an expert coding interview assistant. Provide clear, optimal solutions with detailed explanations." },
-            { role: "user", content: promptText }
-          ],
-          max_tokens: 4000,
-          temperature: 0.2
-        });
+		let responseContent;
 
-        responseContent = solutionResponse.choices[0].message.content;
-      } else if (config.apiProvider === "gemini")  {
-        // Gemini processing
-        if (!this.geminiApiKey) {
-          return {
-            success: false,
-            error: "Gemini API key not configured. Please check your settings."
-          };
-        }
-        
-        try {
-          // Create Gemini message structure
-          const geminiMessages = [
-            {
-              role: "user",
-              parts: [
-                {
-                  text: `You are an expert coding interview assistant. Provide a clear, optimal solution with detailed explanations for this problem:\n\n${promptText}`
-                }
-              ]
-            }
-          ];
+		if (config.apiProvider === "openai") {
+			// OpenAI processing
+			if (!this.openaiClient) {
+				return {
+					success: false,
+					error: "OpenAI API key not configured. Please check your settings.",
+				};
+			}
 
-          // Make API request to Gemini
-          const response = await axios.default.post(
-            `https://generativelanguage.googleapis.com/v1beta/models/${config.solutionModel || "gemini-2.0-flash"}:generateContent?key=${this.geminiApiKey}`,
-            {
-              contents: geminiMessages,
-              generationConfig: {
-                temperature: 0.2,
-                maxOutputTokens: 4000
-              }
-            },
-            { signal }
-          );
+			// Send to OpenAI API
+			const solutionResponse = await this.openaiClient.chat.completions.create({
+				model: config.solutionModel || "gpt-4o",
+				messages: [
+					{
+						role: "system",
+						content:
+							"You are an expert coding interview assistant. Provide clear, optimal solutions with detailed explanations.",
+					},
+					{ role: "user", content: promptText },
+				],
+				max_tokens: 4000,
+				temperature: 0.2,
+			});
 
-          const responseData = response.data as GeminiResponse;
-          
-          if (!responseData.candidates || responseData.candidates.length === 0) {
-            throw new Error("Empty response from Gemini API");
-          }
-          
-          responseContent = responseData.candidates[0].content.parts[0].text;
-        } catch (error) {
-          console.error("Error using Gemini API for solution:", error);
-          return {
-            success: false,
-            error: "Failed to generate solution with Gemini API. Please check your API key or try again later."
-          };
-        }
-      } else if (config.apiProvider === "anthropic") {
-        // Anthropic processing
-        if (!this.anthropicClient) {
-          return {
-            success: false,
-            error: "Anthropic API key not configured. Please check your settings."
-          };
-        }
-        
-        try {
-          const messages = [
-            {
-              role: "user" as const,
-              content: [
-                {
-                  type: "text" as const,
-                  text: `You are an expert coding interview assistant. Provide a clear, optimal solution with detailed explanations for this problem:\n\n${promptText}`
-                }
-              ]
-            }
-          ];
+			responseContent = solutionResponse.choices[0].message.content;
+		} else if (config.apiProvider === "gemini") {
+			// Gemini processing
+			if (!this.geminiApiKey) {
+				return {
+					success: false,
+					error: "Gemini API key not configured. Please check your settings.",
+				};
+			}
 
-          // Send to Anthropic API
-          const response = await this.anthropicClient.messages.create({
-            model: config.solutionModel || "claude-3-7-sonnet-20250219",
-            max_tokens: 4000,
-            messages: messages,
-            temperature: 0.2
-          });
+			try {
+				// Create Gemini message structure
+				const geminiMessages = [
+					{
+						role: "user",
+						parts: [
+							{
+								text: `You are an expert coding interview assistant. Provide a clear, optimal solution with detailed explanations for this problem:\n\n${promptText}`,
+							},
+						],
+					},
+				];
 
-          responseContent = (response.content[0] as { type: 'text', text: string }).text;
-        } catch (error: any) {
-          console.error("Error using Anthropic API for solution:", error);
+				// Make API request to Gemini
+				const response = await axios.default.post(
+					`https://generativelanguage.googleapis.com/v1beta/models/${
+						config.solutionModel || "gemini-2.0-flash"
+					}:generateContent?key=${this.geminiApiKey}`,
+					{
+						contents: geminiMessages,
+						generationConfig: {
+							temperature: 0.2,
+							maxOutputTokens: 4000,
+						},
+					},
+					{ signal }
+				);
 
-          // Add specific handling for Claude's limitations
-          if (error.status === 429) {
-            return {
-              success: false,
-              error: "Claude API rate limit exceeded. Please wait a few minutes before trying again."
-            };
-          } else if (error.status === 413 || (error.message && error.message.includes("token"))) {
-            return {
-              success: false,
-              error: "Your screenshots contain too much information for Claude to process. Switch to OpenAI or Gemini in settings which can handle larger inputs."
-            };
-          }
+				const responseData = response.data as GeminiResponse;
 
-          return {
-            success: false,
-            error: "Failed to generate solution with Anthropic API. Please check your API key or try again later."
-          };
-        }
-      }
-      
-      // Extract parts from the response
-      const codeMatch = responseContent.match(/```(?:\w+)?\s*([\s\S]*?)```/);
-      const code = codeMatch ? codeMatch[1].trim() : responseContent;
-      
-      // Extract thoughts, looking for bullet points or numbered lists
-      const thoughtsRegex = /(?:Thoughts:|Key Insights:|Reasoning:|Approach:)([\s\S]*?)(?:Time complexity:|$)/i;
-      const thoughtsMatch = responseContent.match(thoughtsRegex);
-      let thoughts: string[] = [];
-      
-      if (thoughtsMatch && thoughtsMatch[1]) {
-        // Extract bullet points or numbered items
-        const bulletPoints = thoughtsMatch[1].match(/(?:^|\n)\s*(?:[-*•]|\d+\.)\s*(.*)/g);
-        if (bulletPoints) {
-          thoughts = bulletPoints.map(point => 
-            point.replace(/^\s*(?:[-*•]|\d+\.)\s*/, '').trim()
-          ).filter(Boolean);
-        } else {
-          // If no bullet points found, split by newlines and filter empty lines
-          thoughts = thoughtsMatch[1].split('\n')
-            .map((line) => line.trim())
-            .filter(Boolean);
-        }
-      }
-      
-      // Extract complexity information
-      const timeComplexityPattern = /Time complexity:?\s*([^\n]+(?:\n[^\n]+)*?)(?=\n\s*(?:Space complexity|$))/i;
-      const spaceComplexityPattern = /Space complexity:?\s*([^\n]+(?:\n[^\n]+)*?)(?=\n\s*(?:[A-Z]|$))/i;
-      
-      let timeComplexity = "O(n) - Linear time complexity because we only iterate through the array once. Each element is processed exactly one time, and the hashmap lookups are O(1) operations.";
-      let spaceComplexity = "O(n) - Linear space complexity because we store elements in the hashmap. In the worst case, we might need to store all elements before finding the solution pair.";
-      
-      const timeMatch = responseContent.match(timeComplexityPattern);
-      if (timeMatch && timeMatch[1]) {
-        timeComplexity = timeMatch[1].trim();
-        if (!timeComplexity.match(/O\([^)]+\)/i)) {
-          timeComplexity = `O(n) - ${timeComplexity}`;
-        } else if (!timeComplexity.includes('-') && !timeComplexity.includes('because')) {
-          const notationMatch = timeComplexity.match(/O\([^)]+\)/i);
-          if (notationMatch) {
-            const notation = notationMatch[0];
-            const rest = timeComplexity.replace(notation, '').trim();
-            timeComplexity = `${notation} - ${rest}`;
-          }
-        }
-      }
-      
-      const spaceMatch = responseContent.match(spaceComplexityPattern);
-      if (spaceMatch && spaceMatch[1]) {
-        spaceComplexity = spaceMatch[1].trim();
-        if (!spaceComplexity.match(/O\([^)]+\)/i)) {
-          spaceComplexity = `O(n) - ${spaceComplexity}`;
-        } else if (!spaceComplexity.includes('-') && !spaceComplexity.includes('because')) {
-          const notationMatch = spaceComplexity.match(/O\([^)]+\)/i);
-          if (notationMatch) {
-            const notation = notationMatch[0];
-            const rest = spaceComplexity.replace(notation, '').trim();
-            spaceComplexity = `${notation} - ${rest}`;
-          }
-        }
-      }
+				if (!responseData.candidates || responseData.candidates.length === 0) {
+					throw new Error("Empty response from Gemini API");
+				}
 
-      const formattedResponse = {
-        code: code,
-        thoughts: thoughts.length > 0 ? thoughts : ["Solution approach based on efficiency and readability"],
-        time_complexity: timeComplexity,
-        space_complexity: spaceComplexity
-      };
+				responseContent = responseData.candidates[0].content.parts[0].text;
+			} catch (error) {
+				console.error("Error using Gemini API for solution:", error);
+				return {
+					success: false,
+					error: "Failed to generate solution with Gemini API. Please check your API key or try again later.",
+				};
+			}
+		} else if (config.apiProvider === "anthropic") {
+			// Anthropic processing
+			if (!this.anthropicClient) {
+				return {
+					success: false,
+					error: "Anthropic API key not configured. Please check your settings.",
+				};
+			}
 
-      return { success: true, data: formattedResponse };
-    } catch (error: any) {
+			try {
+				const messages = [
+					{
+						role: "user" as const,
+						content: [
+							{
+								type: "text" as const,
+								text: `You are an expert coding interview assistant. Provide a clear, optimal solution with detailed explanations for this problem:\n\n${promptText}`,
+							},
+						],
+					},
+				];
+
+				// Send to Anthropic API
+				const response = await this.anthropicClient.messages.create({
+					model: config.solutionModel || "claude-3-7-sonnet-20250219",
+					max_tokens: 4000,
+					messages: messages,
+					temperature: 0.2,
+				});
+
+				responseContent = (response.content[0] as { type: "text"; text: string }).text;
+			} catch (error: any) {
+				console.error("Error using Anthropic API for solution:", error);
+
+				// Add specific handling for Claude's limitations
+				if (error.status === 429) {
+					return {
+						success: false,
+						error: "Claude API rate limit exceeded. Please wait a few minutes before trying again.",
+					};
+				} else if (
+					error.status === 413 ||
+					(error.message && error.message.includes("token"))
+				) {
+					return {
+						success: false,
+						error: "Your screenshots contain too much information for Claude to process. Switch to OpenAI or Gemini in settings which can handle larger inputs.",
+					};
+				}
+
+				return {
+					success: false,
+					error: "Failed to generate solution with Anthropic API. Please check your API key or try again later.",
+				};
+			}
+		}
+
+		// Extract parts from the response
+		const codeMatch = responseContent.match(/```(?:\w+)?\s*([\s\S]*?)```/);
+		const code = codeMatch ? codeMatch[1].trim() : "// Code not found or parsing failed";
+
+		// Extract thoughts, looking for bullet points or numbered lists
+		const thoughtsRegex =
+			/(?:Your Thoughts:|Thoughts:|Key Insights:|Reasoning:|Approach:)\s*([\s\S]*?)(?=\n(?:Time complexity:|Space complexity:|$))/i;
+		const thoughtsMatch = responseContent.match(thoughtsRegex);
+		let thoughts: string[] = [];
+		if (thoughtsMatch && thoughtsMatch[1]) {
+			thoughts = thoughtsMatch[1]
+				.split("\n")
+				.map((line) => line.replace(/^[-*•\d.]*\s*/, "").trim())
+				.filter(Boolean);
+		}
+		if (thoughts.length === 0)
+			thoughts = ["Solution approach based on efficiency and readability."];
+
+		const timeComplexityPattern =
+			/Time complexity:?\s*([^\n]+(?:\n[^\n]+)*?)(?=\n\s*(?:Space complexity|$))/i;
+		const spaceComplexityPattern =
+			/Space complexity:?\s*([^\n]+(?:\n[^\n]+)*?)(?=\n\s*(?:[A-Z][a-z]*\s*)*$|\n\s*$)/i; // Improved end lookahead
+
+		let timeComplexity = "O(N) - Default: please verify. Iterates through input once.";
+		const timeMatch = responseContent.match(timeComplexityPattern);
+		if (timeMatch && timeMatch[1]) timeComplexity = timeMatch[1].trim();
+
+		let spaceComplexity =
+			"O(N) - Default: please verify. Uses auxiliary space proportional to input.";
+		const spaceMatch = responseContent.match(spaceComplexityPattern);
+		if (spaceMatch && spaceMatch[1]) spaceComplexity = spaceMatch[1].trim();
+
+		const formattedResponse = {
+			code,
+			thoughts,
+			time_complexity: timeComplexity,
+			space_complexity: spaceComplexity,
+		};
+
+		return { success: true, data: formattedResponse };
+	} catch (error: any) {
       if (axios.isCancel(error)) {
         return {
           success: false,

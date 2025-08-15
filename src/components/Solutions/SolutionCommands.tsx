@@ -60,7 +60,7 @@ const SolutionCommands: React.FC<SolutionCommandsProps> = ({
   }
 
   return (
-      <div className="w-fit">
+      <div className="w-fit  mx-auto">
         <div className="text-xs text-white/90 backdrop-blur-md bg-black/60 rounded-lg py-2 px-4 flex items-center justify-center gap-4">
           {/* Show/Hide - Always visible */}
           <div

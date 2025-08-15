@@ -83,7 +83,7 @@ const QueueCommands: React.FC<QueueCommandsProps> = ({
 
   return (
     <div>
-      <div className="w-fit">
+      <div className="w-fit mx-auto">
         <div className="flex items-center justify-center gap-4 px-4 py-2 text-xs rounded-full text-white/90 backdrop-blur-md bg-black/60">
           {/* Screenshot */}
           <div

@@ -1,6 +1,7 @@
 // Solutions.tsx
 import React, { useState, useEffect, useRef } from "react"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import ReactMarkdown from "react-markdown"
+import { useQueryClient } from "@tanstack/react-query"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism"
 
@@ -32,9 +33,9 @@ export const ContentSection = ({
         </p>
       </div>
     ) : (
-      <div className="text-[13px] leading-[1.4] text-gray-100 max-w-[600px]">
-        {content}
-      </div>
+     <div className="text-[13px] leading-[1.6] text-gray-100 max-w-[600px] prose prose-sm prose-invert">
+          {content}
+        </div>
     )}
   </div>
 )
@@ -521,6 +522,13 @@ const Solutions: React.FC<SolutionsProps> = ({
 
                 {solutionData && (
                   <>
+                    <SolutionSection
+                      title="Solution"
+                      content={solutionData}
+                      isLoading={!solutionData}
+                      currentLanguage={currentLanguage}
+                    />
+
                     <ContentSection
                       title={`My Thoughts (${COMMAND_KEY} + Arrow keys to scroll)`}
                       content={
@@ -533,7 +541,7 @@ const Solutions: React.FC<SolutionsProps> = ({
                                   className="flex items-start gap-2"
                                 >
                                   <div className="w-1 h-1 mt-2 rounded-full bg-blue-400/80 shrink-0" />
-                                  <div>{thought}</div>
+                                  <ReactMarkdown>{thought}</ReactMarkdown>
                                 </div>
                               ))}
                             </div>
@@ -543,12 +551,7 @@ const Solutions: React.FC<SolutionsProps> = ({
                       isLoading={!thoughtsData}
                     />
 
-                    <SolutionSection
-                      title="Solution"
-                      content={solutionData}
-                      isLoading={!solutionData}
-                      currentLanguage={currentLanguage}
-                    />
+                  
 
                     <ComplexitySection
                       timeComplexity={timeComplexityData}
