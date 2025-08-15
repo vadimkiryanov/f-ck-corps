@@ -476,9 +476,8 @@ const Solutions: React.FC<SolutionsProps> = ({
         <div ref={contentRef} className="relative">
           <div className="px-4 py-3 space-y-3">
           {/* Conditionally render the screenshot queue if solutionData is available */}
-          {solutionData && (
+          {solutionData && extraScreenshots.length > 0 && (
             <div className="bg-transparent w-fit">
-              <div className="pb-3">
                 <div className="space-y-3 w-fit">
                   <ScreenshotQueue
                     isLoading={debugProcessing}
@@ -486,7 +485,6 @@ const Solutions: React.FC<SolutionsProps> = ({
                     onDeleteScreenshot={handleDeleteExtraScreenshot}
                   />
                 </div>
-              </div>
             </div>
           )}
 
@@ -503,7 +501,7 @@ const Solutions: React.FC<SolutionsProps> = ({
           {/* Main Content - Modified width constraints */}
           <div className="w-full text-sm text-black rounded-md bg-black/60">
             <div className="overflow-hidden rounded-lg">
-              <div className="max-w-full px-4 py-3 space-y-4">
+              <div className="max-w-full px-4 py-3 space-y-4 max-h-[600px] overflow-auto">
                 {!solutionData && (
                   <>
                     <ContentSection

@@ -240,7 +240,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <ToastContext.Provider value={{ showToast }}>
-          <div className="relative">
+          <div className="relative rounded-2xl bg-black/20 max-w-fit">
             {isInitialized ? (
               hasApiKey ? (
                 <SubscribedApp

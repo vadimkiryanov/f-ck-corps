@@ -24,8 +24,8 @@ const CodeSection = ({
     <h2 className="text-[13px] font-medium text-white tracking-wide"></h2>
     {isLoading ? (
       <div className="space-y-1.5">
-        <div className="mt-4 flex">
-          <p className="text-xs bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-clip-text text-transparent animate-pulse">
+        <div className="flex mt-4">
+          <p className="text-xs text-transparent bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-clip-text animate-pulse">
             Loading solutions...
           </p>
         </div>
@@ -260,7 +260,7 @@ const Debug: React.FC<DebugProps> = ({
 
   return (
     <div ref={contentRef} className="relative">
-      <div className="space-y-3 px-4 py-3">
+      <div className="px-4 py-3 space-y-3">
       {/* Conditionally render the screenshot queue */}
       <div className="bg-transparent w-fit">
         <div className="pb-3">
@@ -280,14 +280,14 @@ const Debug: React.FC<DebugProps> = ({
         onTooltipVisibilityChange={handleTooltipVisibilityChange}
         isProcessing={isProcessing}
         extraScreenshots={screenshots}
-        credits={window.__CREDITS__}
+        _credits={window.__CREDITS__}
         currentLanguage={currentLanguage}
         setLanguage={setLanguage}
       />
 
       {/* Main Content */}
-      <div className="w-full text-sm text-black bg-black/60 rounded-md">
-        <div className="rounded-lg overflow-hidden">
+      <div className="w-full text-sm text-black rounded-md bg-black/60">
+        <div className="overflow-hidden rounded-lg">
           <div className="px-4 py-3 space-y-4">
             {/* Thoughts Section */}
             <ContentSection
@@ -298,7 +298,7 @@ const Debug: React.FC<DebugProps> = ({
                     <div className="space-y-1">
                       {thoughtsData.map((thought, index) => (
                         <div key={index} className="flex items-start gap-2">
-                          <div className="w-1 h-1 rounded-full bg-blue-400/80 mt-2 shrink-0" />
+                          <div className="w-1 h-1 mt-2 rounded-full bg-blue-400/80 shrink-0" />
                           <div>{thought}</div>
                         </div>
                       ))}
@@ -322,8 +322,8 @@ const Debug: React.FC<DebugProps> = ({
               <h2 className="text-[13px] font-medium text-white tracking-wide">Analysis & Improvements</h2>
               {!debugAnalysis ? (
                 <div className="space-y-1.5">
-                  <div className="mt-4 flex">
-                    <p className="text-xs bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-clip-text text-transparent animate-pulse">
+                  <div className="flex mt-4">
+                    <p className="text-xs text-transparent bg-gradient-to-r from-gray-300 via-gray-100 to-gray-300 bg-clip-text animate-pulse">
                       Loading debug analysis...
                     </p>
                   </div>
@@ -394,7 +394,7 @@ const Debug: React.FC<DebugProps> = ({
                                   lineIndex = codeBlockEndIndex;
                                   
                                   return (
-                                    <div key={lineIndex} className="font-mono text-xs bg-black/50 p-3 my-2 rounded overflow-x-auto">
+                                    <div key={lineIndex} className="p-3 my-2 overflow-x-auto font-mono text-xs rounded bg-black/50">
                                       {codeContent}
                                     </div>
                                   );
@@ -432,7 +432,7 @@ const Debug: React.FC<DebugProps> = ({
                             // Handle sub-headers
                             if (line.trim().match(/^#+\s/) || (line.trim().match(/^[A-Z][\w\s]+:/) && line.length < 60)) {
                               return (
-                                <div key={lineIndex} className="font-semibold text-white/80 mt-3 mb-1">
+                                <div key={lineIndex} className="mt-3 mb-1 font-semibold text-white/80">
                                   {line.replace(/^#+\s+/, '')}
                                 </div>
                               );

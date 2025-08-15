@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen, shell, ipcMain } from "electron"
+import { app, BrowserWindow, screen, shell, BrowserWindowConstructorOptions } from "electron"
 import path from "path"
 import fs from "fs"
 import { initializeIpcHandlers } from "./ipcHandlers"
@@ -7,8 +7,13 @@ import { ScreenshotHelper } from "./ScreenshotHelper"
 import { ShortcutsHelper } from "./shortcuts"
 import { initAutoUpdater } from "./autoUpdater"
 import { configHelper } from "./ConfigHelper"
+import SmoothMovementManager from "./SmoothMovementManager"
 import * as dotenv from "dotenv"
 
+interface ProblemInfo {
+  [key: string]: unknown; // Define a more specific type if possible
+}
+ 
 // Constants
 const isDev = process.env.NODE_ENV === "development"
 
@@ -29,10 +34,11 @@ const state = {
   screenshotHelper: null as ScreenshotHelper | null,
   shortcutsHelper: null as ShortcutsHelper | null,
   processingHelper: null as ProcessingHelper | null,
-
+  smoothMovementManager: null as SmoothMovementManager | null,
+ 
   // View and state management
   view: "queue" as "queue" | "solutions" | "debug",
-  problemInfo: null as any,
+  problemInfo: null as ProblemInfo | null,
   hasDebugged: false,
   additionalPrompt: "",
 
@@ -58,8 +64,8 @@ export interface IProcessingHelperDeps {
   getMainWindow: () => BrowserWindow | null
   getView: () => "queue" | "solutions" | "debug"
   setView: (view: "queue" | "solutions" | "debug") => void
-  getProblemInfo: () => any
-  setProblemInfo: (info: any) => void
+  getProblemInfo: () => ProblemInfo | null
+  setProblemInfo: (info: ProblemInfo | null) => void
   getScreenshotQueue: () => string[]
   getExtraScreenshotQueue: () => string[]
   clearQueues: () => void
@@ -116,6 +122,14 @@ export interface IIpcHandlerDeps {
 // Initialize helpers
 function initializeHelpers() {
   state.screenshotHelper = new ScreenshotHelper(state.view)
+  state.smoothMovementManager = new SmoothMovementManager({
+    get: (name: string) => {
+      if (name === 'main') {
+        return state.mainWindow
+      }
+      return undefined
+    }
+  })
   state.processingHelper = new ProcessingHelper({
     getScreenshotHelper,
     getMainWindow,
@@ -184,7 +198,7 @@ const gotTheLock = app.requestSingleInstanceLock()
 if (!gotTheLock) {
   app.quit()
 } else {
-  app.on("second-instance", (event, commandLine) => {
+  app.on("second-instance", () => {
     // Someone tried to run a second instance, we should focus our window.
     if (state.mainWindow) {
       if (state.mainWindow.isMinimized()) state.mainWindow.restore()
@@ -209,14 +223,15 @@ async function createWindow(): Promise<void> {
   const workArea = primaryDisplay.workAreaSize
   state.screenWidth = workArea.width
   state.screenHeight = workArea.height
-  state.step = 60
+  state.step = 200
   state.currentY = 50
 
-  const windowSettings: Electron.BrowserWindowConstructorOptions = {
-    width: 800,
-    height: 600,
-    minWidth: 750,
-    minHeight: 550,
+  const windowSettings: BrowserWindowConstructorOptions = {
+    // It`s better to use the default size of the window
+    // width: 800,
+    // height: 600,
+    // minWidth: 750,
+    // minHeight: 550,
     x: state.currentX,
     y: 50,
     alwaysOnTop: true,
@@ -395,19 +410,23 @@ function handleWindowClosed(): void {
 
 // Window visibility functions
 function hideMainWindow(): void {
-  if (!state.mainWindow?.isDestroyed()) {
-    const bounds = state.mainWindow.getBounds();
-    state.windowPosition = { x: bounds.x, y: bounds.y };
-    state.windowSize = { width: bounds.width, height: bounds.height };
-    state.mainWindow.setIgnoreMouseEvents(true, { forward: true });
-    state.mainWindow.setOpacity(0);
-    state.isWindowVisible = false;
-    console.log('Window hidden, opacity set to 0');
+  if (state.mainWindow && !state.mainWindow.isDestroyed()) {
+    state.smoothMovementManager?.fade(state.mainWindow, {
+      to: 0,
+      duration: 200,
+      onComplete: () => {
+        if (state.mainWindow && !state.mainWindow.isDestroyed()) {
+          state.mainWindow.setIgnoreMouseEvents(true, { forward: true });
+          state.isWindowVisible = false;
+          console.log('Window hidden with fade');
+        }
+      }
+    });
   }
 }
 
 function showMainWindow(): void {
-  if (!state.mainWindow?.isDestroyed()) {
+  if (state.mainWindow && !state.mainWindow.isDestroyed()) {
     if (state.windowPosition && state.windowSize) {
       state.mainWindow.setBounds({
         ...state.windowPosition,
@@ -420,11 +439,16 @@ function showMainWindow(): void {
       visibleOnFullScreen: true
     });
     state.mainWindow.setContentProtection(true);
-    state.mainWindow.setOpacity(0); // Set opacity to 0 before showing
     state.mainWindow.showInactive(); // Use showInactive instead of show+focus
-    state.mainWindow.setOpacity(1); // Then set opacity to 1 after showing
-    state.isWindowVisible = true;
-    console.log('Window shown with showInactive(), opacity set to 1');
+    state.smoothMovementManager?.fade(state.mainWindow, {
+      from: 0,
+      to: 1,
+      duration: 200,
+      onComplete: () => {
+        state.isWindowVisible = true;
+        console.log('Window shown with fade');
+      }
+    });
   }
 }
 
@@ -440,11 +464,10 @@ function toggleMainWindow(): void {
 // Window movement functions
 function moveWindowHorizontal(updateFn: (x: number) => number): void {
   if (!state.mainWindow) return
-  state.currentX = updateFn(state.currentX)
-  state.mainWindow.setPosition(
-    Math.round(state.currentX),
-    Math.round(state.currentY)
-  )
+  state.currentX = updateFn(state.currentX);
+  state.smoothMovementManager?.animateWindowPosition(state.mainWindow, {
+    x: Math.round(state.currentX)
+  }, { duration: 300 });
 }
 
 function moveWindowVertical(updateFn: (y: number) => number): void {
@@ -468,11 +491,10 @@ function moveWindowVertical(updateFn: (y: number) => number): void {
 
   // Only update if within bounds
   if (newY >= maxUpLimit && newY <= maxDownLimit) {
-    state.currentY = newY
-    state.mainWindow.setPosition(
-      Math.round(state.currentX),
-      Math.round(state.currentY)
-    )
+    state.currentY = newY;
+    state.smoothMovementManager?.animateWindowPosition(state.mainWindow, {
+      y: Math.round(state.currentY)
+    }, { duration: 300 });
   }
 }
 
@@ -637,11 +659,11 @@ function getScreenshotHelper(): ScreenshotHelper | null {
   return state.screenshotHelper
 }
 
-function getProblemInfo(): any {
+function getProblemInfo(): ProblemInfo | null {
   return state.problemInfo
 }
 
-function setProblemInfo(problemInfo: any): void {
+function setProblemInfo(problemInfo: ProblemInfo | null): void {
   state.problemInfo = problemInfo
 }
 
