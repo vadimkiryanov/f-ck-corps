@@ -65,7 +65,7 @@ const SolutionCommands: React.FC<SolutionCommandsProps> = ({
         <div className="text-xs text-white/90 backdrop-blur-md bg-black/60 rounded-lg py-2 px-4 flex items-center justify-center gap-4">
           {/* Show/Hide - Always visible */}
           <div
-            className="flex items-center gap-2 cursor-pointer rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
+            className="flex items-center gap-2   rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
             onClick={async () => {
               try {
                 const result = await window.electronAPI.toggleMainWindow()
@@ -94,7 +94,7 @@ const SolutionCommands: React.FC<SolutionCommandsProps> = ({
           {!isProcessing && (
             <>
               <div
-                className="flex items-center gap-2 cursor-pointer rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
+                className="flex items-center gap-2   rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
                 onClick={async () => {
                   try {
                     const result = await window.electronAPI.triggerScreenshot()
@@ -125,7 +125,7 @@ const SolutionCommands: React.FC<SolutionCommandsProps> = ({
 
               {extraScreenshots.length > 0 && (
                 <div
-                  className="flex items-center gap-2 cursor-pointer rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
+                  className="flex items-center gap-2   rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
                   onClick={async () => {
                     try {
                       const result =
@@ -167,7 +167,7 @@ const SolutionCommands: React.FC<SolutionCommandsProps> = ({
 
           {/* Start Over - Always visible */}
           <div
-            className="flex items-center gap-2 cursor-pointer rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
+            className="flex items-center gap-2   rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
             onClick={async () => {
               try {
                 const result = await window.electronAPI.triggerReset()
@@ -202,7 +202,7 @@ const SolutionCommands: React.FC<SolutionCommandsProps> = ({
             onMouseLeave={handleMouseLeave}
           >
             {/* Gear icon */}
-            <div className="w-4 h-4 flex items-center justify-center cursor-pointer text-white/70 hover:text-white/90 transition-colors">
+            <div className="w-4 h-4 flex items-center justify-center   text-white/70 hover:text-white/90 transition-colors">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -235,7 +235,7 @@ const SolutionCommands: React.FC<SolutionCommandsProps> = ({
                     <div className="space-y-3">
                       {/* Show/Hide - Always visible */}
                       <div
-                        className="cursor-pointer rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
+                        className="  rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
                         onClick={async () => {
                           try {
                             const result =
@@ -281,7 +281,7 @@ const SolutionCommands: React.FC<SolutionCommandsProps> = ({
                       {!isProcessing && (
                         <>
                           <div
-                            className="cursor-pointer rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
+                            className="  rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
                             onClick={async () => {
                               try {
                                 const result =
@@ -326,7 +326,7 @@ const SolutionCommands: React.FC<SolutionCommandsProps> = ({
 
                           {extraScreenshots.length > 0 && (
                             <div
-                              className="cursor-pointer rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
+                              className="  rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
                               onClick={async () => {
                                 try {
                                   const result =
@@ -377,7 +377,7 @@ const SolutionCommands: React.FC<SolutionCommandsProps> = ({
 
                       {/* Start Over - Always visible */}
                       <div
-                        className="cursor-pointer rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
+                        className="  rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
                         onClick={async () => {
                           try {
                             const result =

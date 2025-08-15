@@ -327,7 +327,7 @@ export function SettingsDialog({ open: externalOpen, onOpenChange }: SettingsDia
             <label className="text-sm font-medium text-white">API Provider</label>
             <div className="flex gap-2">
               <div
-                className={`flex-1 p-2 rounded-lg cursor-pointer transition-colors ${
+                className={`flex-1 p-2 rounded-lg   transition-colors ${
                   apiProvider === "openai"
                     ? "bg-white/10 border border-white/20"
                     : "bg-black/30 border border-white/5 hover:bg-white/5"
@@ -347,7 +347,7 @@ export function SettingsDialog({ open: externalOpen, onOpenChange }: SettingsDia
                 </div>
               </div>
               <div
-                className={`flex-1 p-2 rounded-lg cursor-pointer transition-colors ${
+                className={`flex-1 p-2 rounded-lg   transition-colors ${
                   apiProvider === "gemini"
                     ? "bg-white/10 border border-white/20"
                     : "bg-black/30 border border-white/5 hover:bg-white/5"
@@ -367,7 +367,7 @@ export function SettingsDialog({ open: externalOpen, onOpenChange }: SettingsDia
                 </div>
               </div>
               <div
-                className={`flex-1 p-2 rounded-lg cursor-pointer transition-colors ${
+                className={`flex-1 p-2 rounded-lg   transition-colors ${
                   apiProvider === "anthropic"
                     ? "bg-white/10 border border-white/20"
                     : "bg-black/30 border border-white/5 hover:bg-white/5"
@@ -421,11 +421,11 @@ export function SettingsDialog({ open: externalOpen, onOpenChange }: SettingsDia
                 <>
                   <p className="mb-1 text-xs text-white/60">1. Create an account at <button 
                     onClick={() => openExternalLink('https://platform.openai.com/signup')} 
-                    className="text-blue-400 cursor-pointer hover:underline">OpenAI</button>
+                    className="text-blue-400   hover:underline">OpenAI</button>
                   </p>
                   <p className="mb-1 text-xs text-white/60">2. Go to <button 
                     onClick={() => openExternalLink('https://platform.openai.com/api-keys')} 
-                    className="text-blue-400 cursor-pointer hover:underline">API Keys</button> section
+                    className="text-blue-400   hover:underline">API Keys</button> section
                   </p>
                   <p className="text-xs text-white/60">3. Create a new secret key and paste it here</p>
                 </>
@@ -433,11 +433,11 @@ export function SettingsDialog({ open: externalOpen, onOpenChange }: SettingsDia
                 <>
                   <p className="mb-1 text-xs text-white/60">1. Create an account at <button 
                     onClick={() => openExternalLink('https://aistudio.google.com/')} 
-                    className="text-blue-400 cursor-pointer hover:underline">Google AI Studio</button>
+                    className="text-blue-400   hover:underline">Google AI Studio</button>
                   </p>
                   <p className="mb-1 text-xs text-white/60">2. Go to the <button 
                     onClick={() => openExternalLink('https://aistudio.google.com/app/apikey')} 
-                    className="text-blue-400 cursor-pointer hover:underline">API Keys</button> section
+                    className="text-blue-400   hover:underline">API Keys</button> section
                   </p>
                   <p className="text-xs text-white/60">3. Create a new API key and paste it here</p>
                 </>
@@ -445,11 +445,11 @@ export function SettingsDialog({ open: externalOpen, onOpenChange }: SettingsDia
                 <>
                   <p className="mb-1 text-xs text-white/60">1. Create an account at <button 
                     onClick={() => openExternalLink('https://console.anthropic.com/signup')} 
-                    className="text-blue-400 cursor-pointer hover:underline">Anthropic</button>
+                    className="text-blue-400   hover:underline">Anthropic</button>
                   </p>
                   <p className="mb-1 text-xs text-white/60">2. Go to the <button 
                     onClick={() => openExternalLink('https://console.anthropic.com/settings/keys')} 
-                    className="text-blue-400 cursor-pointer hover:underline">API Keys</button> section
+                    className="text-blue-400   hover:underline">API Keys</button> section
                   </p>
                   <p className="text-xs text-white/60">3. Create a new API key and paste it here</p>
                 </>
@@ -537,7 +537,7 @@ export function SettingsDialog({ open: externalOpen, onOpenChange }: SettingsDia
                       return (
                         <div
                           key={m.id}
-                          className={`p-2 rounded-lg cursor-pointer transition-colors ${
+                          className={`p-2 rounded-lg   transition-colors ${
                             currentValue === m.id
                               ? "bg-white/10 border border-white/20"
                               : "bg-black/30 border border-white/5 hover:bg-white/5"
