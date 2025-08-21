@@ -45,6 +45,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
           <option value="reactjs" className="text-white bg-black">React.JS</option>
           <option value="CSS" className="text-white bg-black">CSS</option>
           <option value="sql" className="text-white bg-black">SQL</option>
+          <option value="go" className="text-white bg-black">Go</option>
         </select>
       </div>
     </div>

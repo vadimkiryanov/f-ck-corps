@@ -34,7 +34,8 @@ const QueueCommands: React.FC<QueueCommandsProps> = ({
     { value: "typescript", label: "TypeScript" },
     { value: "reactjs", label: "React.JS" },
     { value: "CSS", label: "CSS" },
-    { value: "sql", label: "SQL" }
+    { value: "sql", label: "SQL" },
+    { value: "go", label: "Go" }
   ]
 
   const handleLanguageChange = (newLanguage: string) => {
@@ -123,12 +124,13 @@ const QueueCommands: React.FC<QueueCommandsProps> = ({
               </button>
             </div>
           </div>
+          <span className="flex items-center gap-2 text-nowrap text-[11px] text-white/70">ЯП: {JSON.stringify(currentLanguage)}</span>
 
           {/* Solve Command */}
           {screenshotCount > 0 && (
             <div
               className={`flex flex-col   rounded px-2 py-1.5 hover:bg-white/10 transition-colors ${
-                credits <= 0 ? "opacity-50 cursor-not-allowed" : ""
+                credits <= 0 ? "opacity-50 cursor-default" : ""
               }`}
               onClick={async () => {
 
@@ -205,7 +207,7 @@ const QueueCommands: React.FC<QueueCommandsProps> = ({
                     <div className="space-y-3">
                       {/* Toggle Command */}
                       <div
-                        className="  rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
+                        className="cursor-default rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
                         onClick={async () => {
                           try {
                             const result =
@@ -249,7 +251,7 @@ const QueueCommands: React.FC<QueueCommandsProps> = ({
 
                       {/* Screenshot Command */}
                       <div
-                        className="  rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
+                        className="cursor-default rounded px-2 py-1.5 hover:bg-white/10 transition-colors"
                         onClick={async () => {
                           try {
                             const result =
@@ -296,7 +298,7 @@ const QueueCommands: React.FC<QueueCommandsProps> = ({
                         className={`  rounded px-2 py-1.5 hover:bg-white/10 transition-colors ${
                           screenshotCount > 0
                             ? ""
-                            : "opacity-50 cursor-not-allowed"
+                            : "opacity-50 cursor-default"
                         }`}
                         onClick={async () => {
                           if (screenshotCount === 0) return
@@ -353,7 +355,7 @@ const QueueCommands: React.FC<QueueCommandsProps> = ({
                         className={`  rounded px-2 py-1.5 hover:bg-white/10 transition-colors ${
                           screenshotCount > 0
                             ? ""
-                            : "opacity-50 cursor-not-allowed"
+                            : "opacity-50 cursor-default"
                         }`}
                         onClick={async () => {
                           if (screenshotCount === 0) return
@@ -414,6 +416,7 @@ const QueueCommands: React.FC<QueueCommandsProps> = ({
                               className="flex items-center gap-2 text-[11px] text-white/90"
                             >
                               <input
+                              onMouseEnter={() => handleLanguageChange(lang.value)}
                                 type="radio"
                                 name="language"
                                 value={lang.value}
