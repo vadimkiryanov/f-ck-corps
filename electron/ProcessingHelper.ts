@@ -767,6 +767,7 @@ For complexity explanations, please be thorough. For example: "Time complexity: 
 Your solution should be efficient, well-commented, and handle edge cases.
 
 The response should be in Russian.
+Don't use comments in your code!
 `;
 
 		let responseContent;
