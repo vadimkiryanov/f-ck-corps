@@ -55,8 +55,8 @@ const modelCategories: ModelCategory[] = [
         description: "Best overall performance for problem extraction"
       },
       {
-        id: "gemini-2.0-flash",
-        name: "Gemini 2.0 Flash",
+        id: "gemini-2.5-flash",
+        name: "Gemini 2.5 Flash",
         description: "Faster, more cost-effective option"
       }
     ],
@@ -101,8 +101,8 @@ const modelCategories: ModelCategory[] = [
         description: "Strong overall performance for coding tasks"
       },
       {
-        id: "gemini-2.0-flash",
-        name: "Gemini 2.0 Flash",
+        id: "gemini-2.5-flash",
+        name: "Gemini 2.5 Flash",
         description: "Faster, more cost-effective option"
       }
     ],
@@ -147,8 +147,8 @@ const modelCategories: ModelCategory[] = [
         description: "Best for analyzing code and error messages"
       },
       {
-        id: "gemini-2.0-flash",
-        name: "Gemini 2.0 Flash",
+        id: "gemini-2.5-flash",
+        name: "Gemini 2.5 Flash",
         description: "Faster, more cost-effective option"
       }
     ],
@@ -421,11 +421,11 @@ export function SettingsDialog({ open: externalOpen, onOpenChange }: SettingsDia
                 <>
                   <p className="mb-1 text-xs text-white/60">1. Create an account at <button 
                     onClick={() => openExternalLink('https://platform.openai.com/signup')} 
-                    className="text-blue-400   hover:underline">OpenAI</button>
+                    className="text-blue-400 hover:underline">OpenAI</button>
                   </p>
                   <p className="mb-1 text-xs text-white/60">2. Go to <button 
                     onClick={() => openExternalLink('https://platform.openai.com/api-keys')} 
-                    className="text-blue-400   hover:underline">API Keys</button> section
+                    className="text-blue-400 hover:underline">API Keys</button> section
                   </p>
                   <p className="text-xs text-white/60">3. Create a new secret key and paste it here</p>
                 </>
@@ -433,11 +433,11 @@ export function SettingsDialog({ open: externalOpen, onOpenChange }: SettingsDia
                 <>
                   <p className="mb-1 text-xs text-white/60">1. Create an account at <button 
                     onClick={() => openExternalLink('https://aistudio.google.com/')} 
-                    className="text-blue-400   hover:underline">Google AI Studio</button>
+                    className="text-blue-400 hover:underline">Google AI Studio</button>
                   </p>
                   <p className="mb-1 text-xs text-white/60">2. Go to the <button 
                     onClick={() => openExternalLink('https://aistudio.google.com/app/apikey')} 
-                    className="text-blue-400   hover:underline">API Keys</button> section
+                    className="text-blue-400 hover:underline">API Keys</button> section
                   </p>
                   <p className="text-xs text-white/60">3. Create a new API key and paste it here</p>
                 </>
@@ -445,11 +445,11 @@ export function SettingsDialog({ open: externalOpen, onOpenChange }: SettingsDia
                 <>
                   <p className="mb-1 text-xs text-white/60">1. Create an account at <button 
                     onClick={() => openExternalLink('https://console.anthropic.com/signup')} 
-                    className="text-blue-400   hover:underline">Anthropic</button>
+                    className="text-blue-400 hover:underline">Anthropic</button>
                   </p>
                   <p className="mb-1 text-xs text-white/60">2. Go to the <button 
                     onClick={() => openExternalLink('https://console.anthropic.com/settings/keys')} 
-                    className="text-blue-400   hover:underline">API Keys</button> section
+                    className="text-blue-400 hover:underline">API Keys</button> section
                   </p>
                   <p className="text-xs text-white/60">3. Create a new API key and paste it here</p>
                 </>

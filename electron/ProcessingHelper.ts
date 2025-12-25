@@ -550,7 +550,7 @@ export class ProcessingHelper {
 
           // Make API request to Gemini
           const response = await axios.default.post(
-            `https://generativelanguage.googleapis.com/v1beta/models/${config.extractionModel || "gemini-2.0-flash"}:generateContent?key=${this.geminiApiKey}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/${config.extractionModel || "gemini-2.5-flash"}:generateContent?key=${this.geminiApiKey}`,
             {
               contents: geminiMessages,
               generationConfig: {
@@ -822,7 +822,7 @@ Don't use comments in your code!
 				// Make API request to Gemini
 				const response = await axios.default.post(
 					`https://generativelanguage.googleapis.com/v1beta/models/${
-						config.solutionModel || "gemini-2.0-flash"
+						config.solutionModel || "gemini-2.5-flash"
 					}:generateContent?key=${this.geminiApiKey}`,
 					{
 						contents: geminiMessages,
@@ -1118,7 +1118,7 @@ If you include code examples, use proper markdown code blocks with language spec
           }
 
           const response = await axios.default.post(
-            `https://generativelanguage.googleapis.com/v1beta/models/${config.debuggingModel || "gemini-2.0-flash"}:generateContent?key=${this.geminiApiKey}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/${config.debuggingModel || "gemini-2.5-flash"}:generateContent?key=${this.geminiApiKey}`,
             {
               contents: geminiMessages,
               generationConfig: {
